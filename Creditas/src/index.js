@@ -46,6 +46,20 @@ export function Submit (formElement) {
   })
 }
 
+export function handleChangeWarrantyType (warrantyTypeElement) {
+  warrantyTypeElement.addEventListener('change', () => {
+    changeQuotaOptions(warrantyTypeElement.value)
+  })
+}
+
+export function changeQuotaOptions (warrantyType) {
+  const quotaOptionsElement = document.getElementById('quota_options')
+  const quotaOptions = loanRules[warrantyType].quotas
+  quotaOptionsElement.innerHTML = quotaOptions.map(quotaOption =>
+    `<option value=${quotaOption}>${quotaOption}</option>`
+  )
+}
+
 export function handleChangeRangeVehicleUnderWarranty (
   warrantyRangeElement,
   vehicleWarrantyElement
@@ -75,6 +89,8 @@ export default class CreditasChallenge {
 
   static registerEvents () {
     Submit(document.querySelector('.form'))
+
+    handleChangeWarrantyType(document.getElementById('warranty-type'))
 
     handleChangeRangeVehicleUnderWarranty(
       document.getElementById('valor-garantia-range'),
