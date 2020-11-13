@@ -98,27 +98,29 @@ export function setLoanValues (warrantyType) {
   loanValueRangeLabels[1].innerHTML = loanMaxValue
 }
 
-// export function handleChangeRangeVehicleUnderWarranty (
-//   warrantyRangeElement,
-//   vehicleWarrantyElement
-// ) {
-//   const MIN_VALUE = 12000.0
-//   warrantyRangeElement.addEventListener('change', function (event) {
-//     vehicleWarrantyElement.value =
-//       (Number(MIN_VALUE) * Number(event.target.value)) / 100 + Number(MIN_VALUE)
-//   })
-// }
+export function handleChangeWarrantyValuesInput (warrantyRangeElement, warrantyValueInput) {
+  warrantyValueInput.addEventListener('input', (event) => {
+    warrantyRangeElement.value = event.target.value
+  })
+}
 
-// export function handleChangeVehicleLoanAmount (
-//   loanAmountRangeElement,
-//   loanAmountElement
-// ) {
-//   const MIN_VALUE = 30000.0
-//   loanAmountRangeElement.addEventListener('change', function (event) {
-//     loanAmountElement.value =
-//       (Number(MIN_VALUE) * Number(event.target.value)) / 100 + Number(MIN_VALUE)
-//   })
-// }
+export function handleChangeWarrantyValuesRange (warrantyRangeElement, warrantyValueInput) {
+  warrantyRangeElement.addEventListener('change', (event) => {
+    warrantyValueInput.value = event.target.value
+  })
+}
+
+export function handleChangeLoanValuesInput (loanRangeElement, loanValueInput) {
+  loanValueInput.addEventListener('input', (event) => {
+    loanRangeElement.value = event.target.value
+  })
+}
+
+export function handleChangeLoanValuesRange (loanRangeElement, loanValueInput) {
+  loanRangeElement.addEventListener('change', (event) => {
+    loanValueInput.value = event.target.value
+  })
+}
 
 export default class CreditasChallenge {
   static initialize () {
@@ -130,15 +132,25 @@ export default class CreditasChallenge {
 
     handleChangeWarrantyType(document.getElementById('warranty-type'))
 
-    // handleChangeRangeVehicleUnderWarranty(
-    //   document.getElementById('valor-garantia-range'),
-    //   document.getElementById('valor-garantia')
-    // )
+    handleChangeWarrantyValuesInput(
+      document.getElementById('warranty-value-range'),
+      document.getElementById('warranty-value')
+    )
 
-    // handleChangeVehicleLoanAmount(
-    //   document.getElementById('valor-emprestimo-range'),
-    //   document.getElementById('valor-emprestimo')
-    // )
+    handleChangeWarrantyValuesRange(
+      document.getElementById('warranty-value-range'),
+      document.getElementById('warranty-value')
+    )
+
+    handleChangeLoanValuesInput(
+      document.getElementById('loan-value-range'),
+      document.getElementById('loan-value')
+    )
+
+    handleChangeLoanValuesRange(
+      document.getElementById('loan-value-range'),
+      document.getElementById('loan-value')
+    )
   }
 }
 
