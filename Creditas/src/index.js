@@ -1,5 +1,6 @@
 import './styles.css'
 import { loanRules } from './js/loanRules'
+import { formatCurrency } from './js/formatCurrency'
 
 export const checkFormValidity = formElement => formElement.checkValidity()
 
@@ -57,7 +58,7 @@ export function handleChangeWarrantyType (warrantyTypeElement) {
 }
 
 export function setQuotaOptions (warrantyType) {
-  const quotaOptionsElement = document.getElementById('quota_options')
+  const quotaOptionsElement = document.getElementById('quota-options')
   const quotaOptions = loanRules[warrantyType].quotas
   quotaOptionsElement.innerHTML = quotaOptions.map(quotaOption =>
     `<option value=${quotaOption}>${quotaOption}</option>`
@@ -113,13 +114,29 @@ export function handleChangeWarrantyValuesRange (warrantyRangeElement, warrantyV
 export function handleChangeLoanValuesInput (loanRangeElement, loanValueInput) {
   loanValueInput.addEventListener('input', (event) => {
     loanRangeElement.value = event.target.value
+    calculateTotalLoanAmount()
   })
 }
 
 export function handleChangeLoanValuesRange (loanRangeElement, loanValueInput) {
   loanRangeElement.addEventListener('change', (event) => {
     loanValueInput.value = event.target.value
+    calculateTotalLoanAmount()
   })
+}
+
+export function calculateTotalLoanAmount () {
+  const iof = loanRules.iof
+  const interestRate = loanRules.interest_rate
+  const formValues = getFormValues(document.querySelector('.form'))
+
+  const numberOfQuotas = formValues.find(formValue => formValue.field === 'quota-options').value
+  const loanValue = formValues.find(formValue => formValue.field === 'loan-value').value
+
+  const totalLoanAmountElement = document.getElementsByClassName('amount_container')[0].children[1]
+  const totalLoanAmount = ((iof / 100) + (interestRate / 100) + (numberOfQuotas / 1000) + 1) * loanValue
+
+  totalLoanAmountElement.innerHTML = formatCurrency(totalLoanAmount)
 }
 
 export default class CreditasChallenge {
@@ -151,6 +168,8 @@ export default class CreditasChallenge {
       document.getElementById('loan-value-range'),
       document.getElementById('loan-value')
     )
+
+    calculateTotalLoanAmount()
   }
 }
 
