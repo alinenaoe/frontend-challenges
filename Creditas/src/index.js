@@ -48,7 +48,10 @@ export function Submit (formElement) {
 
 export function handleChangeWarrantyType (warrantyTypeElement) {
   warrantyTypeElement.addEventListener('change', () => {
-    changeQuotaOptions(warrantyTypeElement.value)
+    const warrantyType = warrantyTypeElement.value
+
+    changeQuotaOptions(warrantyType)
+    changeWarrantyValues(warrantyType)
   })
 }
 
@@ -60,27 +63,43 @@ export function changeQuotaOptions (warrantyType) {
   )
 }
 
-export function handleChangeRangeVehicleUnderWarranty (
-  warrantyRangeElement,
-  vehicleWarrantyElement
-) {
-  const MIN_VALUE = 12000.0
-  warrantyRangeElement.addEventListener('change', function (event) {
-    vehicleWarrantyElement.value =
-      (Number(MIN_VALUE) * Number(event.target.value)) / 100 + Number(MIN_VALUE)
-  })
+export function changeWarrantyValues (warrantyType) {
+  const warrantyValueInput = document.getElementById('warranty-value')
+  const warrantyValueRange = document.getElementById('warranty-value-range')
+  const warrantyValueRangeLabels = document.getElementsByClassName('range__values')[0].children
+  const warrantyMaxValue = loanRules[warrantyType].warranty_max_value
+  const warrantyMinValue = loanRules[warrantyType].warranty_min_value
+
+  warrantyValueInput.setAttribute('value', '70000')
+
+  warrantyValueRange.setAttribute('min', warrantyMinValue)
+  warrantyValueRange.setAttribute('max', warrantyMaxValue)
+
+  warrantyValueRangeLabels[0].innerHTML = warrantyMinValue
+  warrantyValueRangeLabels[1].innerHTML = warrantyMaxValue
 }
 
-export function handleChangeVehicleLoanAmount (
-  loanAmountRangeElement,
-  loanAmountElement
-) {
-  const MIN_VALUE = 30000.0
-  loanAmountRangeElement.addEventListener('change', function (event) {
-    loanAmountElement.value =
-      (Number(MIN_VALUE) * Number(event.target.value)) / 100 + Number(MIN_VALUE)
-  })
-}
+// export function handleChangeRangeVehicleUnderWarranty (
+//   warrantyRangeElement,
+//   vehicleWarrantyElement
+// ) {
+//   const MIN_VALUE = 12000.0
+//   warrantyRangeElement.addEventListener('change', function (event) {
+//     vehicleWarrantyElement.value =
+//       (Number(MIN_VALUE) * Number(event.target.value)) / 100 + Number(MIN_VALUE)
+//   })
+// }
+
+// export function handleChangeVehicleLoanAmount (
+//   loanAmountRangeElement,
+//   loanAmountElement
+// ) {
+//   const MIN_VALUE = 30000.0
+//   loanAmountRangeElement.addEventListener('change', function (event) {
+//     loanAmountElement.value =
+//       (Number(MIN_VALUE) * Number(event.target.value)) / 100 + Number(MIN_VALUE)
+//   })
+// }
 
 export default class CreditasChallenge {
   static initialize () {
@@ -92,15 +111,15 @@ export default class CreditasChallenge {
 
     handleChangeWarrantyType(document.getElementById('warranty-type'))
 
-    handleChangeRangeVehicleUnderWarranty(
-      document.getElementById('valor-garantia-range'),
-      document.getElementById('valor-garantia')
-    )
+    // handleChangeRangeVehicleUnderWarranty(
+    //   document.getElementById('valor-garantia-range'),
+    //   document.getElementById('valor-garantia')
+    // )
 
-    handleChangeVehicleLoanAmount(
-      document.getElementById('valor-emprestimo-range'),
-      document.getElementById('valor-emprestimo')
-    )
+    // handleChangeVehicleLoanAmount(
+    //   document.getElementById('valor-emprestimo-range'),
+    //   document.getElementById('valor-emprestimo')
+    // )
   }
 }
 
