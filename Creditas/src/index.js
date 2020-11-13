@@ -50,12 +50,13 @@ export function handleChangeWarrantyType (warrantyTypeElement) {
   warrantyTypeElement.addEventListener('change', () => {
     const warrantyType = warrantyTypeElement.value
 
-    changeQuotaOptions(warrantyType)
-    changeWarrantyValues(warrantyType)
+    setQuotaOptions(warrantyType)
+    setWarrantyValues(warrantyType)
+    setLoanValues(warrantyType)
   })
 }
 
-export function changeQuotaOptions (warrantyType) {
+export function setQuotaOptions (warrantyType) {
   const quotaOptionsElement = document.getElementById('quota_options')
   const quotaOptions = loanRules[warrantyType].quotas
   quotaOptionsElement.innerHTML = quotaOptions.map(quotaOption =>
@@ -63,20 +64,38 @@ export function changeQuotaOptions (warrantyType) {
   )
 }
 
-export function changeWarrantyValues (warrantyType) {
+export function setWarrantyValues (warrantyType) {
   const warrantyValueInput = document.getElementById('warranty-value')
   const warrantyValueRange = document.getElementById('warranty-value-range')
   const warrantyValueRangeLabels = document.getElementsByClassName('range__values')[0].children
-  const warrantyMaxValue = loanRules[warrantyType].warranty_max_value
+
+  const warrantyInitialValue = loanRules[warrantyType].warranty_initial_value
   const warrantyMinValue = loanRules[warrantyType].warranty_min_value
+  const warrantyMaxValue = loanRules[warrantyType].warranty_max_value
 
-  warrantyValueInput.setAttribute('value', '70000')
-
+  warrantyValueInput.value = warrantyInitialValue
+  warrantyValueRange.value = warrantyInitialValue
   warrantyValueRange.setAttribute('min', warrantyMinValue)
   warrantyValueRange.setAttribute('max', warrantyMaxValue)
-
   warrantyValueRangeLabels[0].innerHTML = warrantyMinValue
   warrantyValueRangeLabels[1].innerHTML = warrantyMaxValue
+}
+
+export function setLoanValues (warrantyType) {
+  const loanValueInput = document.getElementById('loan-value')
+  const loanValueRange = document.getElementById('loan-value-range')
+  const loanValueRangeLabels = document.getElementsByClassName('range__values')[1].children
+
+  const loanInitialValue = loanRules[warrantyType].loan_initial_value
+  const loanMinValue = loanRules[warrantyType].loan_min_value
+  const loanMaxValue = loanRules[warrantyType].loan_max_value
+
+  loanValueInput.value = loanInitialValue
+  loanValueRange.value = loanInitialValue
+  loanValueRange.setAttribute('min', loanMinValue)
+  loanValueRange.setAttribute('max', loanMaxValue)
+  loanValueRangeLabels[0].innerHTML = loanMinValue
+  loanValueRangeLabels[1].innerHTML = loanMaxValue
 }
 
 // export function handleChangeRangeVehicleUnderWarranty (
