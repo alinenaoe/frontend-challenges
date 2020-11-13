@@ -16,8 +16,8 @@ export const toStringFormValues = values => {
   const match = matchString => value => value.field === matchString
   const IOF = 6.38 / 100
   const INTEREST_RATE = 2.34 / 100
-  const TIME = values.find(match('parcelas')).value / 1000
-  const VEHICLE_LOAN_AMOUNT = values.find(match('valor-emprestimo')).value
+  const TIME = values.find(match('quota-options')).value / 1000
+  const VEHICLE_LOAN_AMOUNT = values.find(match('loan-value')).value
 
   return `Confirmação\n${values
     .map(value => `Campo: ${value.field}, Valor: ${value.value}`)
@@ -54,6 +54,7 @@ export function handleChangeWarrantyType (warrantyTypeElement) {
     setQuotaOptions(warrantyType)
     setWarrantyValues(warrantyType)
     setLoanValues(warrantyType)
+    calculateTotalLoanAmount()
   })
 }
 
@@ -97,6 +98,10 @@ export function setLoanValues (warrantyType) {
   loanValueRange.setAttribute('max', loanMaxValue)
   loanValueRangeLabels[0].innerHTML = loanMinValue
   loanValueRangeLabels[1].innerHTML = loanMaxValue
+}
+
+export function handleChangeQuotaOptions (quotaOptionsElement) {
+  quotaOptionsElement.addEventListener('change', calculateTotalLoanAmount)
 }
 
 export function handleChangeWarrantyValuesInput (warrantyRangeElement, warrantyValueInput) {
@@ -159,6 +164,8 @@ export default class CreditasChallenge {
     Submit(document.querySelector('.form'))
 
     handleChangeWarrantyType(document.getElementById('warranty-type'))
+
+    handleChangeQuotaOptions(document.getElementById('quota-options'))
 
     handleChangeWarrantyValuesInput(
       document.getElementById('warranty-value-range'),
