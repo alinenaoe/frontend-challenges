@@ -137,6 +137,17 @@ export function calculateTotalLoanAmount () {
   const totalLoanAmount = ((iof / 100) + (interestRate / 100) + (numberOfQuotas / 1000) + 1) * loanValue
 
   totalLoanAmountElement.innerHTML = formatCurrency(totalLoanAmount)
+  calculateQuotaValue(totalLoanAmount, numberOfQuotas)
+}
+
+export function calculateQuotaValue (totalLoanAmount, numberOfQuotas) {
+  const quotaValueElement = document.getElementsByClassName('quota')[0]
+  const quotaValue = totalLoanAmount / numberOfQuotas
+
+  quotaValueElement.innerHTML = `
+    <strong>R$</strong>
+    <span>${formatCurrency(quotaValue).replace('R$', '')}</span>
+  `
 }
 
 export default class CreditasChallenge {

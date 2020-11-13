@@ -162,7 +162,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  min-width: 35%;
+  min-width: 200px;
 }
 
 .form__result h4 {
