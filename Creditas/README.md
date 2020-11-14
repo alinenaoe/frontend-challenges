@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://www.creditas.com/static/images/homepage/b-logo-positivo-horizontal.9ee596f4.svg" width="400">
-</p>
-
 # Frontend Challenge - Creditas
 
 This is a challenge designed to measure the candidate's expertise.
