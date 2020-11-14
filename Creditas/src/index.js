@@ -2,8 +2,6 @@ import './styles.css'
 import { loanRules } from './js/loanRules'
 import { formatCurrency } from './js/formatCurrency'
 
-export const checkFormValidity = formElement => formElement.checkValidity()
-
 export const getFormValues = formElement =>
   Object.values(formElement.elements)
     .filter(element => ['SELECT', 'INPUT'].includes(element.nodeName))
@@ -12,37 +10,17 @@ export const getFormValues = formElement =>
       value: element.value
     }))
 
-export const toStringFormValues = values => {
-  const match = matchString => value => value.field === matchString
-  const IOF = 6.38 / 100
-  const INTEREST_RATE = 2.34 / 100
-  const TIME = values.find(match('quota-options')).value / 1000
-  const VEHICLE_LOAN_AMOUNT = values.find(match('loan-value')).value
-
-  return `Confirmação\n${values
-    .map(value => `Campo: ${value.field}, Valor: ${value.value}`)
-    .join('\n')}`.concat(
-    `\nTotal ${(IOF + INTEREST_RATE + TIME + 1) * VEHICLE_LOAN_AMOUNT}`
-  )
-}
-
-export function Send (values) {
-  return new Promise((resolve, reject) => {
-    try {
-      resolve(toStringFormValues(values))
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
-
 export function Submit (formElement) {
   formElement.addEventListener('submit', function (event) {
     event.preventDefault()
-    if (checkFormValidity(formElement)) {
-      Send(getFormValues(formElement))
-        .then(result => confirm(result, 'Your form submited success'))
-        .catch(error => Alert('Your form submited error', error))
+
+    const loanValue = document.getElementById('loan-value-range').value
+    const warrantyValue = document.getElementById('warranty-value').value
+
+    if (checkValues(loanValue, warrantyValue)) {
+      triggerSuccessModal()
+    } else {
+      triggerValueAlertModal()
     }
   })
 }
@@ -79,8 +57,8 @@ export function setWarrantyValues (warrantyType) {
   warrantyValueRange.value = warrantyInitialValue
   warrantyValueRange.setAttribute('min', warrantyMinValue)
   warrantyValueRange.setAttribute('max', warrantyMaxValue)
-  warrantyValueRangeLabels[0].innerHTML = warrantyMinValue
-  warrantyValueRangeLabels[1].innerHTML = warrantyMaxValue
+  warrantyValueRangeLabels[0].innerHTML = formatCurrency(warrantyMinValue).replace('R$', '')
+  warrantyValueRangeLabels[1].innerHTML = formatCurrency(warrantyMaxValue).replace('R$', '')
 }
 
 export function setLoanValues (warrantyType) {
@@ -96,8 +74,8 @@ export function setLoanValues (warrantyType) {
   loanValueRange.value = loanInitialValue
   loanValueRange.setAttribute('min', loanMinValue)
   loanValueRange.setAttribute('max', loanMaxValue)
-  loanValueRangeLabels[0].innerHTML = loanMinValue
-  loanValueRangeLabels[1].innerHTML = loanMaxValue
+  loanValueRangeLabels[0].innerHTML = formatCurrency(loanMinValue).replace('R$', '')
+  loanValueRangeLabels[1].innerHTML = formatCurrency(loanMaxValue).replace('R$', '')
 }
 
 export function handleChangeQuotaOptions (quotaOptionsElement) {
@@ -184,6 +162,15 @@ export function closeValueAlertModal (modalElement, closeModalButton) {
   closeModalButton.addEventListener('click', () => { modalElement.style.display = 'none' })
 }
 
+export function triggerSuccessModal () {
+  const successModal = document.getElementById('success-modal')
+  successModal.style.display = 'flex'
+}
+
+export function closeSuccessModal (modalElement, closeModalButton) {
+  closeModalButton.addEventListener('click', () => { modalElement.style.display = 'none' })
+}
+
 export default class CreditasChallenge {
   static initialize () {
     this.registerEvents()
@@ -219,6 +206,11 @@ export default class CreditasChallenge {
     closeValueAlertModal(
       document.getElementById('value-alert-modal'),
       document.getElementById('close-value-alert-modal')
+    )
+
+    closeSuccessModal(
+      document.getElementById('success-modal'),
+      document.getElementById('close-success-modal')
     )
 
     calculateTotalLoanAmount()
