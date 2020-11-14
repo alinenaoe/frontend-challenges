@@ -112,7 +112,15 @@ export function handleChangeWarrantyValuesInput (warrantyRangeElement, warrantyV
 
 export function handleChangeWarrantyValuesRange (warrantyRangeElement, warrantyValueInput) {
   warrantyRangeElement.addEventListener('change', (event) => {
-    warrantyValueInput.value = event.target.value
+    const loanValue = document.getElementById('loan-value-range').value
+    const warrantyValue = event.target.value
+
+    if (checkValues(loanValue, warrantyValue)) {
+      warrantyValueInput.value = event.target.value
+      calculateTotalLoanAmount()
+    } else {
+      triggerValueAlertModal()
+    }
   })
 }
 
@@ -125,9 +133,21 @@ export function handleChangeLoanValuesInput (loanRangeElement, loanValueInput) {
 
 export function handleChangeLoanValuesRange (loanRangeElement, loanValueInput) {
   loanRangeElement.addEventListener('change', (event) => {
-    loanValueInput.value = event.target.value
-    calculateTotalLoanAmount()
+    const warrantyValue = document.getElementById('warranty-value').value
+    const loanValue = event.target.value
+
+    if (checkValues(loanValue, warrantyValue)) {
+      loanValueInput.value = event.target.value
+      calculateTotalLoanAmount()
+    } else {
+      triggerValueAlertModal()
+    }
   })
+}
+
+export function checkValues (loanValue, warrantyValue) { // Loan max value: 80% of warranty value
+  const loanLimit = loanRules.loan_limit
+  return loanValue <= loanLimit * warrantyValue
 }
 
 export function calculateTotalLoanAmount () {
@@ -153,6 +173,15 @@ export function calculateQuotaValue (totalLoanAmount, numberOfQuotas) {
     <strong>R$</strong>
     <span>${formatCurrency(quotaValue).replace('R$', '')}</span>
   `
+}
+
+export function triggerValueAlertModal () {
+  const valueAlertModal = document.getElementById('value-alert-modal')
+  valueAlertModal.style.display = 'flex'
+}
+
+export function closeValueAlertModal (modalElement, closeModalButton) {
+  closeModalButton.addEventListener('click', () => { modalElement.style.display = 'none' })
 }
 
 export default class CreditasChallenge {
@@ -185,6 +214,11 @@ export default class CreditasChallenge {
     handleChangeLoanValuesRange(
       document.getElementById('loan-value-range'),
       document.getElementById('loan-value')
+    )
+
+    closeValueAlertModal(
+      document.getElementById('value-alert-modal'),
+      document.getElementById('close-value-alert-modal')
     )
 
     calculateTotalLoanAmount()

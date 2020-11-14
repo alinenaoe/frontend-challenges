@@ -1,6 +1,7 @@
 export const loanRules = {
   iof: 6.38,
   interest_rate: 2.34,
+  loan_limit: 0.8,
   vehicle: {
     quotas: [24, 36, 48],
     warranty_initial_value: 150000,
